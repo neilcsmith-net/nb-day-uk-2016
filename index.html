@@ -20,9 +20,20 @@
           position: absolute;
           bottom: 5px;
           left: 5px;
+          z-index: 100;
       }
+      .reveal section img {
+          background: none;
+          border: none;
+          box-shadow: none;
+      }
+      .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+          font-weight: normal;
+          text-transform: none;
+      }
+
     </style>
-    
+
     <!-- Printing and PDF exports -->
     <script>
       var link = document.createElement('link');
@@ -33,15 +44,89 @@
     </script>
   </head>
   <body>
-   
+
     <div class="reveal">
       <div class="slides">
-        <section>Slide 1</section>
-        <section>Slide 2</section>
+
+        <section>
+          <h2>Strategies for live coding Java</h2>
+        </section>
+
+        <section>
+          <section><h2>Neil C Smith</h2></section>
+          <section>
+            <h3>Director at Eye Division Ltd.</h3>
+            <p>Online solutions for culture, education and third-sector<br>
+              NetBeans, yes :-)<br> Java, no :-(</p>
+          </section>
+          <section>
+            <h3>Artist & Technologist</h3>
+            <p>Interactive spaces and projections.</p>
+          </section>
+          <section>
+            <img src="assets/meeting-pt-1.jpg" />
+          </section>
+          <section>
+            <img src="assets/meeting-pt-2.jpg" />
+          </section>
+          <section>
+            <img src="assets/col.jpg" />
+          </section>
+          <section>
+            <h3>Open source Java projects</h3>
+            <ul>
+              <li>Praxis LIVE - hybrid visual IDE for creative coding</li>
+              <li>GStreamer 1.x bindings</li>
+              <li>JAudioLibs - audio utilities (inc. JNAJack)</li>
+            </ul>
+          </section>
+          <section>
+            <img src="assets/praxis-live-screenshot.jpg" />
+          </section>
+        </section>
+
+        <section>
+          <p>Strategies for live coding Java</p>
+          <p class="fragment">Interactive programming in Java</p>
+          <p class="fragment">Scripting Java in Java</p>
+          <p class="fragment">Let your users extend your application <em class="fragment">at runtime</em></p>
+        </section>
+
+        <section>
+          <h2>What? Why? How?</h2>
+          <ul>
+            <li>Quick demo of Praxis LIVE</li>
+            <li>Include <code>javac</code> in your next application</li>
+            <li><em>An</em> approach to live integration of custom code</li>
+          </ul>
+        </section>
+        
+        <section>
+          <code>Alt-TAB</code> now!
+        </section>
+
+
+        <section>
+          <h2>Architecture</h2>
+          <section>
+            <img src="assets/graph1.png" />
+          </section>
+          <section>
+            <img src="assets/graph2.png" />
+          </section>
+          <section>
+            <img src="assets/graph3.png" />
+          </section>
+          <section>
+            <img src="assets/graph4.png" />
+          </section>
+        </section>
+        </section>
+
       </div>
     </div>
 
-     <footer>
+    <footer>
       <a href="http://www.praxislive.org"><img src="assets/praxislive.png" /></a>
     </footer>
 
@@ -59,8 +144,8 @@
               {src: 'plugin/markdown/markdown.js'},
               {src: 'plugin/notes/notes.js', async: true},
               {src: 'plugin/highlight/highlight.js', async: true, callback: function () {
-              hljs.initHighlightingOnLoad();
-            }}
+                      hljs.initHighlightingOnLoad();
+                  }}
           ]
       });
     </script>

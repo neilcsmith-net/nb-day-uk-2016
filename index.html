@@ -32,6 +32,10 @@
           text-transform: none;
       }
 
+      .reveal pre {
+          width: auto;
+      }
+
     </style>
 
     <!-- Printing and PDF exports -->
@@ -55,22 +59,22 @@
         <section>
           <section><h2>Neil C Smith</h2></section>
           <section>
-            <h3>Director at Eye Division Ltd.</h3>
+            <h3>Director at Eye Division Ltd</h3>
             <p>Online solutions for culture, education and third-sector<br>
               NetBeans, yes :-)<br> Java, no :-(</p>
           </section>
           <section>
             <h3>Artist & Technologist</h3>
-            <p>Interactive spaces and projections.</p>
+            <p>Interactive spaces and projections</p>
           </section>
-          <section>
-            <img src="assets/meeting-pt-1.jpg" />
+          <section data-background-image="assets/meeting-pt-1.jpg" data-background-transition="zoom">
+            <!--<img src="assets/meeting-pt-1.jpg" />-->
           </section>
-          <section>
-            <img src="assets/meeting-pt-2.jpg" />
+          <section data-background-image="assets/meeting-pt-2.jpg" data-background-transition="zoom">
+            <!--<img src="assets/meeting-pt-2.jpg" />-->
           </section>
-          <section>
-            <img src="assets/col.jpg" />
+          <section data-background-image="assets/col.jpg" data-background-transition="zoom">
+            <!--<img src="assets/col.jpg" />-->
           </section>
           <section>
             <h3>Open source Java projects</h3>
@@ -80,8 +84,8 @@
               <li>JAudioLibs - audio utilities (inc. JNAJack)</li>
             </ul>
           </section>
-          <section>
-            <img src="assets/praxis-live-screenshot.jpg" />
+          <section data-background-image="assets/praxis-live-screenshot.jpg" data-background-transition="zoom">
+            <!--<img src="assets/praxis-live-screenshot.jpg" />-->
           </section>
         </section>
 
@@ -96,18 +100,54 @@
           <h2>What? Why? How?</h2>
           <ul>
             <li>Quick demo of Praxis LIVE</li>
-            <li>Include <code>javac</code> in your next application</li>
+            <li>Include <code>javac</code> in <em>your</em> next application</li>
             <li><em>An</em> approach to live integration of custom code</li>
           </ul>
         </section>
-        
+
         <section>
           <code>Alt-TAB</code> now!
         </section>
 
+        <section>
+          <section>
+            <h2><s>Batteries</s> compiler included</h2>
+          </section>
+          <section>
+            <h2>Visual RAD</h2>
+            <img class="stretch" src="assets/flowstone.png" />
+            <p>Flowstone by DSP Robotics</p>
+          </section>
+          <section>
+            <h2>Live IDE's / iterative coding</h2>
+            <img class="stretch" src="assets/juno.png" />
+            <p>Juno - Interesting Development Environment for Julia</p>
+          </section>
+          <section>
+            <h2>Manipulating data</h2>
+            <img class="stretch" src="assets/excel.gif" />
+            <p>Spreadsheet formulas?</p>
+          </section>
+          <section>
+            <p>Have you thought of everything?</p>
+            <p class="fragment">Let's introduce scripting</p>
+            <p class="fragment">User code as a <em>first-class citizen</em></p>
+            <p class="fragment">The best way to script Java is Java</p>
+          </section>
+        </section>
 
         <section>
-          <h2>Architecture</h2>
+          <h2><em>An</em> approach</h2>
+          <p>How Praxis LIVE works</p>
+        </section>
+
+        <section>
+          <section>
+            <h2>Architecture</h2>
+          </section>
+          <section>
+            Dataflow meets actor model
+          </section>
           <section>
             <img src="assets/graph1.png" />
           </section>
@@ -120,11 +160,174 @@
           <section>
             <img src="assets/graph4.png" />
           </section>
+          <section>
+            <h2>Immutable types / no shared state</h2>
+            <ul>
+              <li class="fragment">PNumber, PString, PBoolean, PResource (URI)</li>
+              <li class="fragment">PArray, PMap</li>
+              <li class="fragment">ComponentInfo</li>
+              <li class="fragment">PReference??!</li>
+            </ul>
+          </section>
         </section>
+
+        <section>
+          <section>
+            <h2>Java code to bytecode</h2>
+          </section>
+          <section>
+            <p>Janino<br>http://janino.net</p>
+            <ul>
+              <li class="fragment">Embedded Java compiler <em>and infrastructure</em></li>
+              <li class="fragment">Expression, Script (method) and Class body evaluators</li>
+              <li class="fragment">Works entirely in memory</li>
+            </ul>
+          </section>
+          <section>
+            <p>Class body evaluator</p>
+            <pre><code data-trim class="java">
+              import java.util.*;
+import net.neilcsmith.praxis.core.Argument;
+import net.neilcsmith.praxis.core.ArgumentFormatException;
+import net.neilcsmith.praxis.core.types.*;
+import net.neilcsmith.praxis.code.userapi.*;
+import static net.neilcsmith.praxis.code.userapi.Constants.*;         
+                  
+class SC extends net.neilcsmith.praxis.core.code.CoreCodeDelegate {
+             
+   // user code here
+
+}
+            </code></pre>
+          </section>
+          <section>
+            <ul>
+              <li>Doesn't use Java HotSwap functionality</li>
+              <li class="fragment">Each code iteration is a new Class</li>
+              <li class="fragment">... in a new ClassLoader</li>
+              <li class="fragment">An advantage - no shared state</li>
+            </ul>
+          </section>
+          <section>
+            <pre><code data-trim class="java">
+List&lt;String&gt; values;
+                  
+void setup() {
+    values = new ArrayList&lt;&gt;();
+}
+
+void update() {
+    for (String value : values) {
+    }
+}
+            </code></pre>
+          </section>
+          <section>
+            <pre><code data-trim class="java">
+List&lt;String&gt; values;
+                  
+void setup() {
+    //values = new ArrayList&lt;&gt;();
+}
+
+void update() {
+    for (String value : values) {
+    }
+}
+            </code></pre>
+          </section>
+          <section>
+            Ensure the user's code represents a replicatable state
+          </section>
+          <section>
+            Use annotations to export state and connect to the wider environment
+          </section>
         </section>
+
+        <section>
+          <h2>An example</h2>
+          <p><code>core:math:add</code></p>
+        </section>
+
+        <section>
+          <section>
+            <h2>Architecture - part deux</h2>
+            <p>Got class, now what?</p>
+          </section>
+          <section>
+            <img src="assets/code-objects.png" />
+          </section>
+        </section>
+
+
+        <section>
+          <h2>Rules, what rules?</h2>
+          <ul>
+            <li>Animation</li>
+            <li>Audio streams</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Problems</h2>
+          <section>
+            <pre><code data-trim class="java">
+@P(1) @OnChange("updateState") String data;
+                  
+void updateState() {
+    // handle data changing
+}
+            </code></pre>
+          </section>
+          <section>
+            <pre><code data-trim class="java">
+@P(1) Property value;
+                  
+void update() {
+    if (!value.isAnimating()) {
+        value.set(0).to(1).in(5)
+                .easing(d -> d * d)
+                .onFinish(this::finished);
+    }
+}
+
+void finished() {
+    // handle finished
+}
+
+            </code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Editing</h2>
+          </section>
+          <section>
+            <p>NetBeans code editor</p>
+            <p>https://praxisintermedia.wordpress.com/2015/03/31/code-fragment-editing-in-netbeans-rcp/</p>
+          </section>
+          <section>
+            <p>Lightweight alternatives</p>
+            <p>JSyntaxPane</p>
+            <p>RSyntaxTextArea (http://fifesoft.com)</p>
+            <img class="stretch" src="assets/rsta3.png" />
+          </section>
+        </section>
+        
+        <section>
+          <h2>Thank you!</h2>
+          <p>www.praxislive.org<br>
+          https://github.com/praxis-live/
+          </p>
+        </section>
+        
+        
 
       </div>
     </div>
+
+
 
     <footer>
       <a href="http://www.praxislive.org"><img src="assets/praxislive.png" /></a>

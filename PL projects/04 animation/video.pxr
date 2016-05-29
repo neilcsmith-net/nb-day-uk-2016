@@ -1,0 +1,43 @@
+@ /video root:video {
+  #%pxr.format 2
+  .renderer OpenGL
+  .fps 60
+  @ ./output1 video:output {
+    #%graph.x 621
+    #%graph.y 168
+    .title Animation
+    .always-on-top true
+  }
+  @ ./custom1 video:custom {
+    #%graph.x 242
+    #%graph.y 183
+    .code "
+
+    @P(1) Property x1;
+    @P(2) Property x2;
+    
+    @Override
+    public void setup() \{       
+    \}
+
+    @Override
+    public void draw() \{
+        if (!x1.isAnimating()) \{
+            x1.to(1, 0).in(2).easing(Easing.cubicIn, Easing.circOut);
+            x2.to(1, 0).in(2).easing(Easing.sineInOut);
+        \}
+        double x1d = d(x1);
+        double x2d = d(x2);
+        stroke(255);
+        strokeWeight(5);
+        fill(255 - (x1d * 150),x1d * 175,100);
+        ellipse(x1d * (width - 100) + 50,100,100,100);
+        fill(x2d * 200,100,255 - (x2d * 200));
+        ellipse(x2d * (width - 100) + 50,200,100,100);
+    \}
+"
+    .x-1 0.24351202691937932
+    .x-2 0.440913736907088
+  }
+  ~ ./custom1!out ./output1!in
+}

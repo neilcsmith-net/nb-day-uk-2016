@@ -1,0 +1,131 @@
+@ /audio root:audio {
+  #%pxr.format 2
+  @ ./output1 audio:output {
+    #%graph.x 860
+    #%graph.y 285
+  }
+  @ ./audio-clock audio:custom {
+    #%graph.x 105
+    #%graph.y 82
+    .code "
+
+    @P(1)
+    @Type.Number(min = 10, max = 300, def = 120)
+    @Port(false)
+    @OnChange(\"updatePulse\")
+    double bpm;
+    @P(2)
+    @Type.Integer(min=1,max=16,def=4)
+    @OnChange(\"updatePulse\")
+    int subdivision;
+    @P(3)
+    @ReadOnly
+    double actualBpm;
+    @P(4)
+    @ReadOnly
+    double period;
+    @P(5)
+    @ReadOnly
+    int bufferCount;
+    
+    @Out(1) Output out;
+    
+    @Inject int position; 
+
+    @Override
+    public void setup() \{
+        updatePulse();
+    \}
+
+    @Override
+    public void update() \{
+        position++;
+        if (position > bufferCount) \{
+            position = 0;
+            out.send();
+        \}
+    \}
+    
+    void updatePulse() \{
+        double secPerPulse = 1 / ((bpm * subdivision) / 60);
+        double bufPerPulse = secPerPulse / (blockSize / sampleRate);
+        bufferCount = (int) (bufPerPulse + 0.5);
+        period = bufferCount * (blockSize / sampleRate);
+        actualBpm = 60 / subdivision * (1 / period);
+    \}
+"
+  }
+  @ ./every1 core:routing:every {
+    #%graph.x 214
+    #%graph.y 194
+    .count 16
+  }
+  @ ./iterator1 core:array:iterator {
+    #%graph.x 212
+    #%graph.y 331
+    .values [array a3]
+  }
+  @ ./synth-base audio:custom {
+    #%graph.x 514
+    #%graph.y 296
+    .code "
+
+    @Out(1) AudioOut out;
+    
+    @UGen Osc osc;
+    @UGen LFO lfo;
+    @UGen Gain amp;
+    
+    @P(1) @Type.Number(min=0, max=1, def=1)
+    double gain;
+
+    @Inject double frequency;
+    @Inject Property envelope;
+    
+    @Override
+    public void setup() \{
+        osc.waveform(SQUARE);
+        lfo.frequency(0.5);
+        link(osc, amp, mod(lfo), out);
+    \}
+
+    @Override
+    public void update() \{
+        osc.frequency(frequency);
+        double e = d(envelope);
+        e = e * e;
+        e *= gain;
+        amp.level(e);
+    \} 
+    
+    @In(1) void note(String note) \{
+        if (\"-\".equals(note)) \{
+            return;
+        \}
+        int midi = noteToMidi(note);
+        if (midi > 0) \{
+            noteOn(midi);
+        \} else \{
+            noteOff();
+        \}
+    \}
+    
+    void noteOn(int midi) \{
+        frequency = midiToFrequency(midi);
+        envelope.to(1).in(0.0);
+    \}
+    
+    void noteOff() \{
+        envelope.to(0).in(0.2);
+    \}
+
+    
+"
+    .gain 0.1
+  }
+  ~ ./audio-clock!out ./every1!in
+  ~ ./every1!out ./iterator1!trigger
+  ~ ./synth-base!out ./output1!in-1
+  ~ ./synth-base!out ./output1!in-2
+  ~ ./iterator1!out ./synth-base!note
+}
